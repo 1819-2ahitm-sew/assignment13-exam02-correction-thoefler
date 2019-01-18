@@ -4,6 +4,7 @@ import at.htl.bank.model.BankKonto;
 import at.htl.bank.model.GiroKonto;
 import at.htl.bank.model.SparKonto;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +12,12 @@ import java.util.Scanner;
 
 /**
  * Legen Sie eine statische Liste "konten" an, in der Sie die einzelnen Konten speichern
- *
  */
+
+
 public class Main {
+
+  public static ArrayList<BankKonto> konten = new ArrayList<BankKonto>();
 
   // die Konstanten sind package-scoped wegen der Unit-Tests
   static final double GEBUEHR = 0.02;
@@ -23,7 +27,7 @@ public class Main {
   static final String BUCHUNGSDATEI = "buchungen.csv";
   static final String ERGEBNISDATEI = "ergebnis.csv";
 
-  
+
   /**
    * Führen Sie die drei Methoden erstelleKonten, fuehreBuchungenDurch und
    * findKontoPerName aus
@@ -32,13 +36,15 @@ public class Main {
    */
   public static void main(String[] args) {
 
+    erstelleKonten(KONTENDATEI);
+
   }
 
   /**
    * Lesen Sie aus der Datei (erstellung.csv) die Konten ein.
    * Je nach Kontentyp erstellen Sie ein Spar- oder Girokonto.
    * Gebühr und Zinsen sind als Konstanten angegeben.
-   *
+   * <p>
    * Nach dem Anlegen der Konten wird auf der Konsole folgendes ausgegeben:
    * Erstellung der Konten beendet
    *
@@ -46,7 +52,31 @@ public class Main {
    */
   private static void erstelleKonten(String datei) {
 
-        System.out.println("erstelleKonten noch nicht implementiert");
+    String read;
+
+    try (Scanner scanner = new Scanner(new FileReader(datei))) {
+      scanner.nextLine();
+
+      while (scanner.hasNextLine()) {
+
+        read = scanner.nextLine();
+        System.out.println(read);
+        String[] konto = read.split(";");
+
+        double anfangsBestand = Double.parseDouble(konto[2]);
+        String name = konto[1];
+
+        if (konto[0].equals("Sparkonto")) {
+          konten.add(new SparKonto(name, anfangsBestand));
+        } else {
+          konten.add(new GiroKonto(name, anfangsBestand));
+        }
+      }
+
+    } catch (FileNotFoundException e) {
+      System.err.println(e.getMessage());
+    }
+
   }
 
   /**
@@ -55,39 +85,58 @@ public class Main {
    * kontoVon und kontoNach gesucht.
    * Anschließend wird der Betrag vom kontoVon abgebucht und
    * der Betrag auf das kontoNach eingezahlt
-   *
+   * <p>
    * Nach dem Durchführen der Buchungen wird auf der Konsole folgendes ausgegeben:
    * Buchung der Beträge beendet
-   *
+   * <p>
    * Tipp: Verwenden Sie hier die Methode 'findeKontoPerName(String name)'
    *
    * @param datei BUCHUNGSDATEI
    */
   private static void fuehreBuchungenDurch(String datei) {
-        System.out.println("fuehreBuchungenDurch noch nicht implementiert");
+
+
+    try (Scanner scanner = new Scanner(new FileReader(datei))) {
+      scanner.nextLine();
+
+      while (scanner.hasNextLine()) {
+
+        String[] buchungen = scanner.nextLine().split(";");
+
+
+
+      }
+
+
+
+    } catch (FileNotFoundException e) {
+      System.err.println(e.getMessage());
+    }
+
+    System.out.println("fuehreBuchungenDurch noch nicht implementiert");
   }
 
   /**
    * Es werden die Kontostände sämtlicher Konten in die ERGEBNISDATEI
    * geschrieben. Davor werden bei Sparkonten noch die Zinsen dem Konto
    * gutgeschrieben
-   *
+   * <p>
    * Die Datei sieht so aus:
-   *
+   * <p>
    * name;kontotyp;kontostand
    * Susi;SparKonto;875.5
    * Mimi;GiroKonto;949.96
    * Hans;GiroKonto;1199.96
-   *
+   * <p>
    * Vergessen Sie nicht die Überschriftenzeile
-   *
+   * <p>
    * Nach dem Schreiben der Datei wird auf der Konsole folgendes ausgegeben:
    * Ausgabe in Ergebnisdatei beendet
    *
    * @param datei ERGEBNISDATEI
    */
   private static void schreibeKontostandInDatei(String datei) {
-        System.out.println("schreibeKontostandInDatei noch nicht implementiert");
+    System.out.println("schreibeKontostandInDatei noch nicht implementiert");
   }
 
   /**
@@ -95,12 +144,13 @@ public class Main {
   /**
    * Durchsuchen Sie die Liste "konten" nach dem ersten Konto mit dem als Parameter
    * übergebenen Namen
+   *
    * @param name
    * @return Bankkonto mit dem gewünschten Namen oder NULL, falls der Namen
-   *         nicht gefunden wird
+   * nicht gefunden wird
    */
   public static BankKonto findeKontoPerName(String name) {
-       return null;
+    return null;
   }
 
 }
